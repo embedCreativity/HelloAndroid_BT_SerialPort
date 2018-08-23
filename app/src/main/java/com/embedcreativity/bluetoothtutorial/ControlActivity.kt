@@ -17,7 +17,8 @@ import java.util.*
 class ControlActivity: AppCompatActivity() {
 
     companion object {
-        var m_myUUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+        // UUID from: https://www.uuidgenerator.net/version4
+        var m_myUUID: UUID = UUID.fromString("3aba5d64-afc7-425d-9ebc-7afe76cc790d")
         var m_bluetoothSocket: BluetoothSocket? = null
         lateinit var m_progress: ProgressDialog
         lateinit var m_bluetoothAdapter: BluetoothAdapter

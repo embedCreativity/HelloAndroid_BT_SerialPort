@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BluetoothTutorial</string>
+    <string name="app_name">BluetoothSerial</string>
     <string name="refresh">Refresh</string>
     <string name="on">On</string>
     <string name="off">Off</string>
