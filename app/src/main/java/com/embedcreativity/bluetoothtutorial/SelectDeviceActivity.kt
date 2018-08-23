@@ -78,7 +78,7 @@ class SelectDeviceActivity : AppCompatActivity() {
                     toast("Bluetooth has been disabled")
                 }
             } else if (resultCode == Activity.RESULT_CANCELED) {
-                toast("Bluettoh enabling has been canceled")
+                toast("Bluetooth enabling has been canceled")
             }
         }
     }
