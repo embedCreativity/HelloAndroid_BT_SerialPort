@@ -1,4 +1,4 @@
-package com.embedcreativity.bluetoothtutorial
+package com.embedcreativity.bluetoothserial
 
 import org.junit.Test
 

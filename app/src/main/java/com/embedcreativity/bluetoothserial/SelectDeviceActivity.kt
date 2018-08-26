@@ -1,16 +1,18 @@
-package com.embedcreativity.bluetoothtutorial
+package com.embedcreativity.bluetoothserial
 
 import android.app.Activity
 import android.app.ProgressDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
+import android.os.IBinder
 import android.util.Log
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -25,8 +27,10 @@ class SelectDeviceActivity : AppCompatActivity() {
     private var m_bluetoothAdapter: BluetoothAdapter? = null
     private lateinit var m_pairedDevices: Set<BluetoothDevice>
     private val REQUEST_ENABLE_BLUETOOTH = 1
+    private var isBound = false
 
     companion object {
+        var myService: BluetoothService? = null
         // Try getting a UUID from: https://www.uuidgenerator.net/version4
         var m_myUUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
         var m_bluetoothSocket: BluetoothSocket? = null
@@ -40,6 +44,7 @@ class SelectDeviceActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.select_device_layout)
 
+        // Make sure bluetooth is enabled before loading the rest of the UI
         m_bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         if (m_bluetoothAdapter == null ) {
             toast("this device doesn't support bluetooth")
@@ -50,7 +55,24 @@ class SelectDeviceActivity : AppCompatActivity() {
             startActivityForResult(enableBluetoothIntent, REQUEST_ENABLE_BLUETOOTH)
         }
 
+        // Bind to the bluetooth service
+        val intent = Intent(this, BluetoothService::class.java)
+        bindService(intent, myConnection, Context.BIND_AUTO_CREATE)
+
+        // Set up UI onClickListener for the SelectDeviceActivity::Refresh button
         select_device_refresh.setOnClickListener{ pairedDeviceList() }
+    }
+
+    private val myConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as BluetoothService.MyLocalBinder
+            myService = binder.getService()
+            isBound = true
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            isBound = false
+        }
     }
 
     private fun pairedDeviceList() {
@@ -75,7 +97,10 @@ class SelectDeviceActivity : AppCompatActivity() {
         select_device_list.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                 val device: BluetoothDevice = list[position]
                 m_address = device.address
-                ConnectToDevice(this).execute()
+                // Tell service to go connect to device
+                myService?.connectToDevice(m_address)
+                // Start AsyncTask to wait for service to complete
+                WaitForConnect(this).execute()
         }
     }
 
@@ -94,7 +119,7 @@ class SelectDeviceActivity : AppCompatActivity() {
         }
     }
 
-    private class ConnectToDevice(c: Context) : AsyncTask<Void, Void, String>() {
+    private class WaitForConnect(c: Context) : AsyncTask<Void, Void, String>() {
         private var connectSuccess: Boolean = true
         private val context: Context
 
@@ -108,19 +133,14 @@ class SelectDeviceActivity : AppCompatActivity() {
         }
 
         override fun doInBackground(vararg p0: Void?): String? {
-            try {
-                if ( m_bluetoothSocket == null || !m_isConnected) {
-                    m_bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-                    val device: BluetoothDevice = m_bluetoothAdapter.getRemoteDevice(m_address)
-                    m_bluetoothSocket = device.createInsecureRfcommSocketToServiceRecord(m_myUUID)
-                    BluetoothAdapter.getDefaultAdapter().cancelDiscovery()
-                    m_bluetoothSocket!!.connect()
+
+            while ( true ) {
+                if (false == myService?.getConnectStatus()) {
+                    Thread.sleep(250)
+                } else {
+                    return null
                 }
-            } catch (e: IOException) {
-                connectSuccess = false
-                e.printStackTrace()
             }
-            return null
         }
 
         override fun onPostExecute(result: String?) {
@@ -128,7 +148,7 @@ class SelectDeviceActivity : AppCompatActivity() {
 
             m_progress.dismiss()
 
-            if (!connectSuccess) {
+            if ( false == myService?.getConnected()) {
                 Log.i("data", "couldn't connect")
                 Toast.makeText(this.context, "Failed to connect!", Toast.LENGTH_LONG).show()
             } else {
@@ -139,5 +159,4 @@ class SelectDeviceActivity : AppCompatActivity() {
             }
         }
     }
-
 }

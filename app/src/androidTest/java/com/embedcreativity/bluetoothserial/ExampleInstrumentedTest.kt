@@ -1,4 +1,4 @@
-package com.embedcreativity.bluetoothtutorial
+package com.embedcreativity.bluetoothserial
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("com.embedcreativity.bluetoothtutorial", appContext.packageName)
+        assertEquals("com.embedcreativity.bluetoothserial", appContext.packageName)
     }
 }
