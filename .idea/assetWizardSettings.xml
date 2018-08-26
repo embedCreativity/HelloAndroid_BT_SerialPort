@@ -23,7 +23,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="56" />
+                                                <entry key="scalingPercent" value="63" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -34,8 +34,8 @@
                                   <option name="values">
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
-                                      <entry key="backgroundColor" value="b5bed9" />
-                                      <entry key="foregroundImage" value="C:\Users\mark\AndroidStudioProjects\HelloAndroid_BT_SerialPort\icon.png" />
+                                      <entry key="backgroundColor" value="ffffff" />
+                                      <entry key="foregroundImage" value="C:\Users\mark\AndroidStudioProjects\HelloAndroid_BT_SerialPort\icon_fade.png" />
                                     </map>
                                   </option>
                                 </PersistentState>
