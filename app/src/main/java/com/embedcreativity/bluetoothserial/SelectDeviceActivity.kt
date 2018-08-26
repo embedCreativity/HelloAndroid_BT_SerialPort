@@ -19,7 +19,6 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import kotlinx.android.synthetic.main.select_device_layout.*
 import org.jetbrains.anko.toast
-import java.io.IOException
 import java.util.*
 
 class SelectDeviceActivity : AppCompatActivity() {
@@ -80,7 +79,6 @@ class SelectDeviceActivity : AppCompatActivity() {
         val list : ArrayList<BluetoothDevice> = ArrayList()
         val nameList : ArrayList<String> = ArrayList()
 
-
         if (!m_pairedDevices.isEmpty()) {
             for (device: BluetoothDevice in m_pairedDevices) {
                 list.add(device)
@@ -133,7 +131,6 @@ class SelectDeviceActivity : AppCompatActivity() {
         }
 
         override fun doInBackground(vararg p0: Void?): String? {
-
             while ( true ) {
                 if (false == myService?.getConnectStatus()) {
                     Thread.sleep(250)

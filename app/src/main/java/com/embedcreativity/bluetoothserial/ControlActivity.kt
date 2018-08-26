@@ -47,6 +47,7 @@ class ControlActivity: AppCompatActivity() {
 
     private fun disconnect() {
         myService?.disconnect()
+        unbindService(myConnection)
         finish()
     }
 }
