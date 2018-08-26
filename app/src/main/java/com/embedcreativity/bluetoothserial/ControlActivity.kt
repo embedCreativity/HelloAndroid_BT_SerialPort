@@ -28,9 +28,13 @@ class ControlActivity: AppCompatActivity() {
         val intent = Intent(this, BluetoothService::class.java)
         bindService(intent, myConnection, Context.BIND_AUTO_CREATE)
 
-        control_led_on.setOnClickListener{ myService?.sendCommand("On\r\n") }
-        control_led_off.setOnClickListener{ myService?.sendCommand("Off\r\n") }
-        control_led_disconnnect.setOnClickListener{ disconnect() }
+        btnSend.setOnClickListener{ sendCommand() }
+        btnDisconnect.setOnClickListener{ disconnect() }
+    }
+
+    private fun sendCommand() {
+        val cmd: String = "ssid:[" + txtSSID.text + "],pass:[" + txtPassword.text + "]\r\n"
+        myService?.sendCommand(cmd)
     }
 
     private val myConnection = object : ServiceConnection {

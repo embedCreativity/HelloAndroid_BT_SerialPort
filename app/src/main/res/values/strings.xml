@@ -1,7 +1,11 @@
 <resources>
     <string name="app_name">BluetoothSerial</string>
-    <string name="refresh">Refresh</string>
-    <string name="on">On</string>
-    <string name="off">Off</string>
-    <string name="disconnect">Disconnect</string>
+    // Select Device Activity
+    <string name="refresh">Get Associated Devices</string>
+    // Control Activity
+    <string name="lblSSID">SSID</string>
+    <string name="lblPassword">Password</string>
+    <string name="btnSend">Send</string>
+    <string name="btnDisconnect">Disconnect</string>
+
 </resources>
